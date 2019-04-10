@@ -14,7 +14,7 @@ bool SoundSensorBool=false;
 task LightSensorTask()
 {
 	while(true){
-		if(SensorValue[LightSensor] < 40)
+		if(SensorValue[LightSensor] < 10)
 		{
 			//LightSensorBool =true;
 			LightSensorBool =false;
@@ -95,18 +95,19 @@ void TheMove(string action)
 
 	if(action== "EmptyRightTurn")
 	{
-		setMotorSyncTime(RightMotor, LeftMotor, 0, 1000, 25);
-		waitUntilMotorStop(RightMotor);
-//	setMotorSyncEncoder(RightMotor, LeftMotor, -100, 500, 25);
-//		waitUntilMotorStop(LeftMotor);
-		rotateLeft();
-		setMotorSyncTime(RightMotor, LeftMotor, 0, 1500, 25);
-		waitUntilMotorStop(RightMotor);
-//		if(SensorValue[DistanceSensor] >30)/
-//		{
-//			setMotorSyncTime(RightMotor, LeftMotor, 0, 1000, 50);
-//			wait1Msec(1000);
-//		}
+//		setMotorSyncTime(RightMotor, LeftMotor, 0, 2000, 25);
+//		waitUntilMotorStop(RightMotor);
+////	setMotorSyncEncoder(RightMotor, LeftMotor, -100, 500, 25);
+////		waitUntilMotorStop(LeftMotor);
+//		rotateLeft();
+//		setMotorSyncTime(RightMotor, LeftMotor, 0, 2000, 25);
+//		waitUntilMotorStop(RightMotor);
+//			setMotorSyncTime(RightMotor, LeftMotor, 0, 1000, 25);
+//			waitUntilMotorStop(RightMotor);
+
+//			setMotorSyncEncoder(RightMotor , LeftMotor , 0, 100, 25);
+//			setMotorSyncEncoder(RightMotor, LeftMotor, -40 , 2000, 25);
+//			waitUntilMotorStop(RightMotor);
 
 
 
@@ -115,12 +116,16 @@ void TheMove(string action)
 	if(action== "RightTurn")
 	{
 		setMotorSync(RightMotor, LeftMotor, -100, 25);
-		wait1Msec(50);
+		wait1Msec(100);
+		setMotorSyncEncoder(RightMotor, LeftMotor, 0, 1, 100);
+		waitUntilMotorStop(RightMotor);
 	}
 	if(action== "LeftTurn")
 	{
 		setMotorSync(RightMotor, LeftMotor, 100, 25);
-		wait1Msec(50);
+		wait1Msec(100);
+		setMotorSyncEncoder(RightMotor, LeftMotor, 0, 1, 100);
+		waitUntilMotorStop(RightMotor);
 
 
 	}
@@ -163,7 +168,7 @@ task main()
 			 		{
 			 		WhatToDo= "LeftTurn";
 			  	}
-			 	else if (SensorValue[DistanceSensor] >50)
+			 	else if (SensorValue[DistanceSensor] >100)
 			 		{
 			 		WhatToDo="EmptyRightTurn";
 			  	}
