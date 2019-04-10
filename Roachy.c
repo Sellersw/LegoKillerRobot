@@ -105,10 +105,12 @@ void TheMove(string action)
 //			setMotorSyncTime(RightMotor, LeftMotor, 0, 1000, 25);
 //			waitUntilMotorStop(RightMotor);
 
-//			setMotorSyncEncoder(RightMotor , LeftMotor , 0, 100, 25);
-//			setMotorSyncEncoder(RightMotor, LeftMotor, -40 , 2000, 25);
-//			waitUntilMotorStop(RightMotor);
-
+			setMotorSyncTime(RightMotor, LeftMotor, 0, 1500, 25);
+			waitUntilMotorStop(RightMotor);
+			setMotorSyncEncoder(RightMotor, LeftMotor, -40 , 1300, 25);
+			waitUntilMotorStop(RightMotor);
+			setMotorSyncTime(RightMotor, LeftMotor, 0, 1500, 25);
+			waitUntilMotorStop(RightMotor);
 
 
 	}
@@ -137,7 +139,7 @@ void TheMove(string action)
 
 //		setMotorSyncEncoder(RightMotor, LeftMotor, -100, 500, 25);
 //		waitUntilMotorStop(LeftMotor);
-		rotateLeft();
+		rotateRight();
 
 
 
@@ -168,14 +170,14 @@ task main()
 			 		{
 			 		WhatToDo= "LeftTurn";
 			  	}
-			 	else if (SensorValue[DistanceSensor] >100)
+			 	else if (SensorValue[DistanceSensor] <20)
 			 		{
-			 		WhatToDo="EmptyRightTurn";
+			 		WhatToDo= "RightTurn";
 			  	}
 			 	else
 			 		{
 
-				  WhatToDo= "RightTurn";
+				  WhatToDo= "EmptyRightTurn";
 			 		}
 			 }
 			 if(TouchSensorBool)
