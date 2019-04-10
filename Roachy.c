@@ -114,7 +114,7 @@ void TheMove(string action)
 
 	if(action== "RightTurn")
 	{
-		setMotorSync(RightMotor, LeftMotor, 100, 25);
+		setMotorSync(RightMotor, LeftMotor, -100, 25);
 		wait1Msec(100);
 	}
 	if(action== "LeftTurn")
