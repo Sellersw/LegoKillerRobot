@@ -95,18 +95,18 @@ void TheMove(string action)
 
 	if(action== "EmptyRightTurn")
 	{
-		setMotorSyncTime(RightMotor, LeftMotor, 0, 5000, 50);
-
+		setMotorSyncTime(RightMotor, LeftMotor, 0, 1000, 25);
+		waitUntilMotorStop(RightMotor);
 //	setMotorSyncEncoder(RightMotor, LeftMotor, -100, 500, 25);
 //		waitUntilMotorStop(LeftMotor);
-		rotateRight();
-		setMotorSyncTime(RightMotor, LeftMotor, 0, 500, 50);
-		wait1Msec(500);
-		if(SensorValue[DistanceSensor] >30)
-		{
-			setMotorSyncTime(RightMotor, LeftMotor, 0, 1000, 50);
-			wait1Msec(1000);
-		}
+		rotateLeft();
+		setMotorSyncTime(RightMotor, LeftMotor, 0, 1500, 25);
+		waitUntilMotorStop(RightMotor);
+//		if(SensorValue[DistanceSensor] >30)/
+//		{
+//			setMotorSyncTime(RightMotor, LeftMotor, 0, 1000, 50);
+//			wait1Msec(1000);
+//		}
 
 
 
@@ -115,12 +115,12 @@ void TheMove(string action)
 	if(action== "RightTurn")
 	{
 		setMotorSync(RightMotor, LeftMotor, -100, 25);
-		wait1Msec(100);
+		wait1Msec(50);
 	}
 	if(action== "LeftTurn")
 	{
 		setMotorSync(RightMotor, LeftMotor, 100, 25);
-		wait1Msec(100);
+		wait1Msec(50);
 
 
 	}
