@@ -11,6 +11,8 @@
 bool wallBool= false;
 bool distanceBool= false;
 
+bool wallhit = false;
+
 //bumper sensor globals
 bool bumpberBool= false;
 
@@ -53,14 +55,15 @@ void rotateRight()
 	waitUntilMotorStop(RightMotor);
 }
 
-//task ballsensor()
-//{
-//	SensorValue[BallFinder]
-//}
 task wallSensor()
 {
 	while(true){
-		if(SensorValue[Wall] < WallNear)
+
+		if(SensorValue[BallFinder] < 50)
+		{
+			FOUNDBALL= true;
+		}
+		else if(SensorValue[Wall] < WallNear)
 		{
 			wallBool = true;
 			distanceBool= false;
@@ -87,6 +90,7 @@ task bumperSensor()
 			if(SensorValue[Bumper] < 1)
 		{
 			bumpberBool=true;
+			FOUNDBALL= false;
 		}
 		else{
 			bumpberBool=false;
@@ -154,6 +158,7 @@ void gogogo(string action)
 	{
 		reverse(700, -50);
 		rotateRight();
+		count= count+1;
 	}
 	if(action == "wrongball" )
 	{
@@ -184,44 +189,72 @@ task main()
 	startTask (bumperSensor);
 	startTask (lightSensor );
 
-//		undoGrabber();
+		undoGrabber();
 		while(true)
 		{
-			goDo = "walk";
-			if(wallBool)
-			{
-				goDo = "follownear";
-			}
-			if(distanceBool)
-			{
-				goDo = "followfar";
-			}
-			if(bumpberBool)
-			{
-				goDo = "reverse";
-				count= count+1;
-			}
-			if(colorBool & empty)
-			{
-				goDo = "wrongball";
-			}
-			if(colorRight & empty)
-			{
-				goDo = "grab";
-			}
-			if(!empty)
-			{
-				goDo = "celebrate";
-			}
-			if(count == 4)
-			{
-				count = 0;
-				WallFar = WallFar+20;
-        WallNear= WallNear+20;
-			}
+			while(FOUNDBALL == false)
+				{
+					goDo = "walk";
+					if(wallBool)
+					{
+						goDo = "follownear";
+					}
+					if(distanceBool)
+					{
+						goDo = "followfar";
+					}
+					if(bumpberBool)
+					{
+						goDo = "reverse";
+
+					}
+					if(colorBool & empty)
+					{
+						goDo = "wrongball";
+					}
+					if(colorRight & empty)
+					{
+						goDo = "grab";
+					}
+					if(!empty)
+					{
+						goDo = "celebrate";
+					}
+					if(count == 4)
+					{
+						count = 0;
+						WallFar = WallFar+20;
+		        WallNear= WallNear+20;
+					}
+					gogogo(goDo);
+				}
+				goDo= "rotateLeft";
+				gogogo(goDo);
+				while(FOUNDBALL == true)
+				{
+					goDo = "circle";
+					if(bumpberBool)
+					{
+						goDo = "reverse";
+
+					}
+					if(colorBool & empty)
+					{
+						goDo = "wrongball";
+					}
+					if(colorRight & empty)
+					{
+						goDo = "grab";
+					}
+					if(!empty)
+					{
+						goDo = "celebrate";
+					}
+					gogogo(goDo);
+				}
 
 
-			gogogo(goDo);
+
 		}
 
 
