@@ -11,7 +11,7 @@
 bool wallBool= false;
 bool distanceBool= false;
 
-bool wallhit = false;
+bool celebrate= false;
 
 //bumper sensor globals
 bool bumpberBool= false;
@@ -174,11 +174,12 @@ void gogogo(string action)
 		wait1Msec(5000);
 		Motor[Grabber]=0;
 		empty = false;
+		celebrate= true;
 
 	}
 	if(action == "celebrate" )
 	{
-		setMotorSyncTime(RightMotor, LeftMotor, 0, 5000, -100);
+		setMotorSyncTime(RightMotor, LeftMotor, 0, 3000, 100);
 		playTone(soundBlip);
 		waitUntilMotorStop(RightMotor);
 	}
@@ -226,6 +227,11 @@ task main()
 						WallFar = WallFar+20;
 		        WallNear= WallNear+20;
 					}
+					gogogo(goDo);
+				}
+				while(celebrate)
+				{
+					goDo="celebrate";
 					gogogo(goDo);
 				}
 				goDo= "rotateLeft";
