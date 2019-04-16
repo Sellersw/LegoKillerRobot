@@ -20,14 +20,12 @@ bool bumpberBool= false;
 bool colorBool= false;
 bool colorRight= false;
 
-
-
 bool FOUNDBALL = false;
-
 bool empty = true;
 
-int WallNear = 15;
-int count= 0;
+
+const int wallConst= 10;
+const int distanceConst= 50;
 
 string goDo = "foward";
 
@@ -58,21 +56,15 @@ void rotateRight()
 task wallSensor()
 {
 	while(true){
-		if(SensorValue[Wall] < WallNear)
+		if(SensorValue[Wall] < wallConst)
 		{
 			wallBool = true;
-			distanceBool= false;
 
-		}
-		else if(SensorValue[Wall] > WallFar)
-		{
-			wallBool = false;
-			distanceBool= true;
 		}
 		else
 			{
 			wallBool = false;
-			distanceBool= false;
+
 
 		}
 
@@ -83,7 +75,7 @@ task BallSensor()
 {
 	while(true){
 
-		if(SensorValue[Ball] <50 )
+		if(SensorValue[Ball] < distanceConst)
 		{
 			FOUNDBALL= true;
 		}
@@ -104,7 +96,6 @@ task bumperSensor()
 			if(SensorValue[Bumper] < 1)
 		{
 			bumpberBool=true;
-			count= count+1;
 		}
 		else{
 			bumpberBool=false;
@@ -174,7 +165,6 @@ void gogogo(string action)
 	{
 		reverse(700, -50);
 		rotateRight();
-		count= count+1;
 	}
 	if(action == "wrongball" )
 	{
@@ -218,10 +208,6 @@ task main()
 					{
 						goDo = "follownear";
 					}
-//					if(distanceBool)
-	//				{
-//						goDo = "followfar";
-//					}
 					if(bumpberBool)
 					{
 						goDo = "reverse";
@@ -234,12 +220,6 @@ task main()
 					if(colorRight & empty)
 					{
 						goDo = "grab";
-					}
-					if(count == 4)
-					{
-						count = 0;
-						WallFar = WallFar+20;
-		        WallNear= WallNear+20;
 					}
 					if(FOUNDBALL)
 					{
