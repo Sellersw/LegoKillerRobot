@@ -1,7 +1,7 @@
-#pragma config(Sensor, S1,     Bumper,         sensorEV3_Touch)
-#pragma config(Sensor, S2,     Wall,           sensorSONAR)
+#pragma config(Sensor, S1,     Wall,           sensorEV3_Ultrasonic)
+#pragma config(Sensor, S2,     Bumper,         sensorEV3_Touch)
 #pragma config(Sensor, S3,     Light,          sensorEV3_Color, modeEV3Color_Color)
-#pragma config(Sensor, S4,     BallFinder,     sensorLightActive)
+#pragma config(Sensor, S4,     Ball,           sensorSONAR)
 #pragma config(Motor,  motorA,          RightMotor,    tmotorEV3_Large, PIDControl, encoder)
 #pragma config(Motor,  motorB,          Grabber,       tmotorEV3_Large, PIDControl, encoder)
 #pragma config(Motor,  motorD,          LeftMotor,     tmotorEV3_Large, PIDControl, encoder)
@@ -21,12 +21,12 @@ bool colorBool= false;
 bool colorRight= false;
 
 
+
 bool FOUNDBALL = false;
 
 bool empty = true;
 
 int WallNear = 15;
-int WallFar = 20;
 int count= 0;
 
 string goDo = "foward";
@@ -58,15 +58,11 @@ void rotateRight()
 task wallSensor()
 {
 	while(true){
-
-		if(SensorValue[BallFinder] < 50)
-		{
-			FOUNDBALL= true;
-		}
-		else if(SensorValue[Wall] < WallNear)
+		if(SensorValue[Wall] < WallNear)
 		{
 			wallBool = true;
 			distanceBool= false;
+
 		}
 		else if(SensorValue[Wall] > WallFar)
 		{
@@ -79,6 +75,24 @@ task wallSensor()
 			distanceBool= false;
 
 		}
+
+	}
+	releaseCPU();
+}
+task BallSensor()
+{
+	while(true){
+
+		if(SensorValue[Ball] <50 )
+		{
+			FOUNDBALL= true;
+		}
+		else
+		{
+			FOUNDBALL = false;
+		}
+		releaseCPU();
+
 	}
 
 
@@ -90,7 +104,7 @@ task bumperSensor()
 			if(SensorValue[Bumper] < 1)
 		{
 			bumpberBool=true;
-			FOUNDBALL= false;
+			count= count+1;
 		}
 		else{
 			bumpberBool=false;
@@ -131,9 +145,11 @@ void undoGrabber()
 }
 void gogogo(string action)
 {
-//	if(action == )
-//	{
-//	}
+	if(action == "turn" )
+	{
+		rotateRight();
+		waitUntilMotorStop(RightMotor);
+	}
 	if(action == "walk")
 	{
 		setMotorSyncTime(RightMotor, LeftMotor, 0, 100, 100)
@@ -172,7 +188,7 @@ void gogogo(string action)
 		Motor[Grabber]=-10;
 
 		wait1Msec(5000);
-		Motor[Grabber]=0;
+		motor[Grabber]=0;
 		empty = false;
 		celebrate= true;
 
@@ -186,24 +202,26 @@ void gogogo(string action)
 }
 task main()
 {
+	startTask (BallSensor);
 	startTask (wallSensor);
 	startTask (bumperSensor);
 	startTask (lightSensor );
 
+
 		undoGrabber();
 		while(true)
 		{
-			while(FOUNDBALL == false)
+			while(true)
 				{
 					goDo = "walk";
 					if(wallBool)
 					{
 						goDo = "follownear";
 					}
-					if(distanceBool)
-					{
-						goDo = "followfar";
-					}
+//					if(distanceBool)
+	//				{
+//						goDo = "followfar";
+//					}
 					if(bumpberBool)
 					{
 						goDo = "reverse";
@@ -216,10 +234,6 @@ task main()
 					if(colorRight & empty)
 					{
 						goDo = "grab";
-					}
-					if(!empty)
-					{
-						goDo = "celebrate";
 					}
 					if(count == 4)
 					{
@@ -227,37 +241,17 @@ task main()
 						WallFar = WallFar+20;
 		        WallNear= WallNear+20;
 					}
-					gogogo(goDo);
-				}
-				while(celebrate)
-				{
-					goDo="celebrate";
-					gogogo(goDo);
-				}
-				goDo= "rotateLeft";
-				gogogo(goDo);
-				while(FOUNDBALL == true)
-				{
-					goDo = "circle";
-					if(bumpberBool)
+					if(FOUNDBALL)
 					{
-						goDo = "reverse";
+						goDo= "turn";
+					}
+					if(celebrate)
+					{
+						goDo="celebrate";
+					}
+					gogogo(goDo);
+				}
 
-					}
-					if(colorBool & empty)
-					{
-						goDo = "wrongball";
-					}
-					if(colorRight & empty)
-					{
-						goDo = "grab";
-					}
-					if(!empty)
-					{
-						goDo = "celebrate";
-					}
-					gogogo(goDo);
-				}
 
 
 
